@@ -1,5 +1,5 @@
 [package]
-name = "rust-on-esp32"
+name = "esp32-rust-web"
 version = "0.1.0"
 authors = ["Zack Sargent <zack@zack.fyi>"]
 edition = "2021"
@@ -29,6 +29,8 @@ esp-idf-svc = { version = "0.47.1", default-features = false }
 anyhow = "1.0.75"
 esp-idf-hal = "0.42.4"
 embedded-hal = "0.2.7"
+embedded-svc = "0.26.4"
+esp-idf-sys = "0.33.7"
 
 [build-dependencies]
 embuild = "0.31.3"
