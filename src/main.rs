@@ -45,14 +45,15 @@ fn main() -> anyhow::Result<()> {
     let mut wifi = BlockingWifi::wrap(
         EspWifi::new(peripherals.modem, sys_loop.clone(), Some(nvs))?,
         sys_loop,
-    )?; 
+    )?;
 
     connect_wifi(&mut wifi).map_err(|details| {
         error!("failed to connect to wifi: {}", details);
         details
     })?;
 
-    let ip_info = wifi.wifi()
+    let ip_info = wifi
+        .wifi()
         .sta_netif() // returns the EspNetif abstraction in client mode
         .get_ip_info()?;
     info!("Wifi DHCP info: {:?}", ip_info);
