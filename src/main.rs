@@ -15,7 +15,6 @@ use embedded_svc::{
 use esp_idf_svc::hal::prelude::Peripherals;
 use esp_idf_svc::http::client::EspHttpConnection;
 use esp_idf_svc::log::EspLogger;
-use esp_idf_svc::tls::{self, EspTls, X509};
 use esp_idf_svc::wifi::{BlockingWifi, EspWifi};
 use esp_idf_svc::{eventloop::EspSystemEventLoop, nvs::EspDefaultNvsPartition};
 
@@ -48,7 +47,10 @@ fn main() -> anyhow::Result<()> {
         sys_loop,
     )?; 
 
-    connect_wifi(&mut wifi)?;
+    connect_wifi(&mut wifi).map_err(|details| {
+        error!("failed to connect to wifi: {}", details);
+        details
+    })?;
 
     let ip_info = wifi.wifi()
         .sta_netif() // returns the EspNetif abstraction in client mode
@@ -64,7 +66,7 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-//! Set up wifi for basic WPA2 Enterprise connections
+/// Set up wifi for basic WPA2 Enterprise connections
 fn connect_wifi(wifi: &mut BlockingWifi<EspWifi<'static>>) -> anyhow::Result<()> {
     unsafe {
         esp_wifi_sta_wpa2_ent_set_username(USERNAME.as_ptr(), USERNAME.len().try_into().unwrap()); // username, NOT EMAIL
@@ -85,27 +87,11 @@ fn connect_wifi(wifi: &mut BlockingWifi<EspWifi<'static>>) -> anyhow::Result<()>
     wifi.start()?;
     info!("Wifi started");
 
-    match wifi.connect() {
-        Ok(()) => {
-            info!("Wifi connected");
-            Ok(())
-        }
-        Err(details) => {
-            info!("WiFi failed to connect {}", details);
-            Err(details)
-        }
-    }?;
+    wifi.connect()?;
+    info!("Wifi connected");
 
-    match wifi.connect() {
-        Ok(()) => {
-            info!("netif_up");
-            Ok(())
-        }
-        Err(details) => {
-            info!("wait_netif_up failed to connect {}", details);
-            Err(details)
-        }
-    }?;
+    wifi.wait_netif_up()?;
+    info!("Wifi netif up");
 
     Ok(())
 }
