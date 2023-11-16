@@ -1,4 +1,4 @@
-# rust-on-esp32
+# esp32-rust-web
 Steps to running Rust on ESP32 by the Norse IoT club
 
 Thanks to the [esp-rust](https://github.com/esp-rs) community for making this an easy process.
@@ -43,9 +43,7 @@ cargo espflash flash <SERIAL>
 # for me, this was cargo espflash flash --port /dev/ttyUSB0 
 ```
 
-# Internal Blink project
-
-The standard sanity check after creating a new project is to create a project that blinks the internal led.
+# Send HTTP GET request from Rust on ESP32
 
 See [main.rs](/rust-on-esp32/src/main.rs) for the sample code.
 
