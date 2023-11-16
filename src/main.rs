@@ -1,6 +1,6 @@
 //! Connecting to NKU's WiFi in Rust
 //!
-//! Set SSID, USERNAME, PASSWORD via envionment variables.
+//! Remember to set SSID, USERNAME, PASSWORD via envionment variables.
 //!
 //! Obtained by merging:
 //! - https://github.com/esp-rs/esp-idf-svc/blob/master/examples/http_request.rs
